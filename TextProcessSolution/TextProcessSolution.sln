@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextProcess.Api", "TextProc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Api", "TextProcess.Api\TextProcess.Api.csproj", "{739A2267-2629-461E-AFCA-A3513CEEC9F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Api.Services", "TextProcess.Api.Services\TextProcess.Api.Services.csproj", "{233DEB8C-4291-4924-8CDC-E621BA8C7C70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Api.Core", "TextProcess.Api.Services\TextProcess.Api.Core.csproj", "{233DEB8C-4291-4924-8CDC-E621BA8C7C70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Api.Tests", "TextProcess.Api.Tests\TextProcess.Api.Tests.csproj", "{8B2131D0-4202-4AAA-818B-D8185ACF5768}"
 EndProject
@@ -15,9 +15,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextProcess.Wpf", "TextProc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Wpf", "TextProcess.Wpf\TextProcess.Wpf.csproj", "{C9F36A16-90BE-47AF-93C5-9CE2B36A11FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Wpf.Services", "TextProcess.Wpf.Services\TextProcess.Wpf.Services.csproj", "{8D647ACA-BC54-4D53-9A77-A0515AEC46CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Wpf.Core", "TextProcess.Wpf.Services\TextProcess.Wpf.Core.csproj", "{8D647ACA-BC54-4D53-9A77-A0515AEC46CC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcess.Wpf.Tests", "TextProcess.Wpf.Tests\TextProcess.Wpf.Tests.csproj", "{24C36A11-867F-4E04-A3C5-C5CC0C46183B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{242AD52B-D420-40FE-A778-D5B5BDC8845E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
