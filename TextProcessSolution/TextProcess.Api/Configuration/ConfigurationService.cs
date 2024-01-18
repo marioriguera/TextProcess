@@ -1,4 +1,6 @@
-﻿namespace TextProcess.Api.Configuration
+﻿using NLog;
+
+namespace TextProcess.Api.Configuration
 {
     /// <summary>
     /// Manages configuration service values.
@@ -35,6 +37,11 @@
         #endregion
 
         #region LogProperties
+
+        /// <summary>
+        /// Gets or sets the NLog logger associated with the current class.
+        /// </summary>
+        public NLog.ILogger Logger { get; private set; } = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Gets or sets the log level.

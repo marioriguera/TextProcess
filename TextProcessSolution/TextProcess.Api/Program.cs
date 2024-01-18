@@ -1,10 +1,16 @@
-using NLog;
 using TextProcess.Api.Configuration;
 
 namespace TextProcess.Api
 {
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main method to start the application.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +19,6 @@ namespace TextProcess.Api
             NlogConfigurator.AddDebugger();
             NlogConfigurator.Start();
 
-            var logger = LogManager.GetCurrentClassLogger();
             try
             {
                 // Apply configs
@@ -44,13 +49,13 @@ namespace TextProcess.Api
 
                 app.MapControllers();
 
-                logger.Fatal($"The API will start.");
+                ConfigurationService.Current.Logger.Fatal($"The API will start.");
                 app.Run();
             }
             catch (Exception ex)
             {
                 // NLog: catch setup errors
-                logger.Error(ex, "Stopped program because of exception");
+                ConfigurationService.Current.Logger.Error(ex, "Stopped program because of exception");
             }
             finally
             {

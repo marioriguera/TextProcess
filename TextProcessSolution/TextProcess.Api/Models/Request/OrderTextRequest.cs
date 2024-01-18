@@ -1,33 +1,52 @@
-﻿namespace TextProcess.Api.Models.Request
+﻿using System.Text;
+using TextProcess.Api.Configuration;
+using TextProcess.Api.Contracts;
+
+namespace TextProcess.Api.Models.Request
 {
     /// <summary>
-    /// Represents an immutable record for a request to order text with specified options.
+    /// Represents a class for a request to order text with specified options.
     /// </summary>
-    public record OrderTextRequest
+    public class OrderTextRequest : IValidRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderTextRequest"/> record with the specified parameters.
+        /// Initializes a new instance of the <see cref="OrderTextRequest"/> class with the specified parameters.
         /// </summary>
         /// <param name="textToOrder">The text to be ordered. Must not be <c>null</c>.</param>
         /// <param name="orderOption">The option associated with the ordering process.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="textToOrder"/> is <c>null</c>.
-        /// </exception>
-        public OrderTextRequest(string textToOrder, int orderOption)
+        public OrderTextRequest(string? textToOrder, int? orderOption)
         {
-            TextToOrder = textToOrder ?? throw new ArgumentNullException(nameof(textToOrder), $"Text to order can't be null.");
+            TextToOrder = textToOrder;
             OrderOption = orderOption;
         }
 
         /// <summary>
         /// Gets or sets the text to be ordered.
         /// </summary>
-        public string TextToOrder { get; set; }
+        public string? TextToOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the option associated with the ordering process.
         /// The value must correspond to a primary identifier within the sorting options list.
         /// </summary>
-        public int OrderOption { get; set; }
+        public int? OrderOption { get; private set; }
+
+        /// <inheritdoc/>
+        public bool IsValid()
+        {
+            bool isValid = !string.IsNullOrEmpty(TextToOrder) && OrderOption != null;
+            if (!isValid) ConfigurationService.Current.Logger.Warn($"A {nameof(OrderTextRequest)} class is invalid. {ToString()}");
+            return isValid;
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append($"{nameof(TextToOrder)} = {TextToOrder ?? string.Empty} , {nameof(OrderOption)} = {(OrderOption == null ? string.Empty : OrderOption.ToString())}");
+
+            return builder.ToString();
+        }
     }
 }

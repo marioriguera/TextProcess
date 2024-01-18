@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace TextProcess.Api.Configuration
 {
@@ -37,6 +38,10 @@ namespace TextProcess.Api.Configuration
                     Url = new Uri("https://www.linkedin.com/in/mario-david-riguera-castillo/"),
                 },
             });
+
+            // using System.Reflection;
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         }
     }
 }
