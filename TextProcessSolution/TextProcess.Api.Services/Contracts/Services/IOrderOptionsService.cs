@@ -5,7 +5,7 @@ namespace TextProcess.Api.Core.Contracts.Services
     /// <summary>
     /// Defines the contract for an order options service.
     /// </summary>
-    internal interface IOrderOptionsService
+    public interface IOrderOptionsService
     {
         /// <summary>
         /// Retrieves a enumerable collection of order options.
