@@ -5,7 +5,7 @@ namespace TextProcess.Api.Models.Request
     /// <summary>
     /// Represents an immutable record for a request to order text with specified options.
     /// </summary>
-    public record OrderTextRequest : IOrderTextRequest
+    public record OrderTextRequest
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderTextRequest"/> record with the specified parameters.
@@ -21,10 +21,15 @@ namespace TextProcess.Api.Models.Request
             OrderOption = orderOption;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the text to be ordered.
+        /// </summary>
         public string TextToOrder { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the option associated with the ordering process.
+        /// The value must correspond to a primary identifier within the sorting options list.
+        /// </summary>
         public int OrderOption { get; set; }
     }
 }
