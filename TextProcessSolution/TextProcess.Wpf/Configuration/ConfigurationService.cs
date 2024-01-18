@@ -1,6 +1,8 @@
-﻿using NLog;
+﻿using System.ComponentModel;
+using System.Windows;
+using Microsoft.Extensions.Hosting;
 
-namespace TextProcess.Api.Configuration
+namespace TextProcess.Wpf.Configuration
 {
     /// <summary>
     /// Manages configuration service values.
@@ -34,14 +36,18 @@ namespace TextProcess.Api.Configuration
         /// </summary>
         public static ConfigurationService Current { get; } = new ConfigurationService();
 
+        /// <summary>
+        /// Gets a value indicating whether application is in design mode or not.
+        /// </summary>
+        public static bool IsInDesignMode { get => DesignerProperties.GetIsInDesignMode(new DependencyObject()); }
+
+        /// <summary>
+        /// Gets or sets manage host.
+        /// </summary>
+        public IHost Host { get; set; }
         #endregion
 
         #region LogProperties
-
-        /// <summary>
-        /// Gets or sets the NLog logger associated with the current class.
-        /// </summary>
-        public NLog.ILogger Logger { get; private set; } = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Gets or sets the log level.
@@ -51,7 +57,7 @@ namespace TextProcess.Api.Configuration
         /// <summary>
         /// Gets or sets the log path to store log as file.
         /// </summary>
-        public string LogPath { get; set; } = @"C:/Logs/ProcessText/ProcessText_Api.log";
+        public string LogPath { get; set; } = @"C:/Logs/ProcessText/ProcessText_WPF.log";
 
         /// <summary>
         /// Gets or sets the log max file size before rolling.
