@@ -18,14 +18,16 @@ namespace TextProcess.Api
             {
                 // Apply configs
                 NlogConfigurator.ApplyConfigurationToLogs();
-                logger.Fatal($"Api going to start.");
 
                 // Add services to the container.
+                TextProcess.Api.Core.Dependencies.Register.AddDependencies(builder.Services);
 
                 builder.Services.AddControllers();
+
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
+                builder.Services.ConfigureSwaggerGen();
 
                 var app = builder.Build();
 
@@ -42,6 +44,7 @@ namespace TextProcess.Api
 
                 app.MapControllers();
 
+                logger.Fatal($"The API will start.");
                 app.Run();
             }
             catch (Exception ex)

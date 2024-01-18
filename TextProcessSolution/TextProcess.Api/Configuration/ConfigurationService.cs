@@ -32,10 +32,6 @@
         /// </summary>
         public static ConfigurationService Current { get; } = new ConfigurationService();
 
-        /// <summary>
-        /// Gets or sets manage host.
-        /// </summary>
-        public IHost Host { get; set; }
         #endregion
 
         #region LogProperties
