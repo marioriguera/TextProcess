@@ -1,6 +1,4 @@
-﻿using TextProcess.Api.Contracts.Response;
-
-namespace TextProcess.Api.Models.Response
+﻿namespace TextProcess.Api.Models.Response
 {
     /// <summary>
     /// Represents an immutable record for a generic message response with success status and content.

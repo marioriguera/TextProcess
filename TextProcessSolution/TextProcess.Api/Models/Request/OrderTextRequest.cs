@@ -1,6 +1,4 @@
-﻿using TextProcess.Api.Contracts.Request;
-
-namespace TextProcess.Api.Models.Request
+﻿namespace TextProcess.Api.Models.Request
 {
     /// <summary>
     /// Represents an immutable record for a request to order text with specified options.
