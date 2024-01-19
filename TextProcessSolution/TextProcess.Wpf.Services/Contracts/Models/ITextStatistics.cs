@@ -1,4 +1,4 @@
-﻿namespace TextProcess.Api.Core.Contracts.Models
+﻿namespace TextProcess.Wpf.Core.Contracts.Models
 {
     /// <summary>
     /// Represents an interface for collecting statistics on text content.

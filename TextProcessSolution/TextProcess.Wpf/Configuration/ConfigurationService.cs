@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using Microsoft.Extensions.Hosting;
+using NLog;
 
 namespace TextProcess.Wpf.Configuration
 {
@@ -48,6 +49,11 @@ namespace TextProcess.Wpf.Configuration
         #endregion
 
         #region LogProperties
+
+        /// <summary>
+        /// Gets or sets the NLog logger associated with the current class.
+        /// </summary>
+        public NLog.ILogger Logger { get; private set; } = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Gets or sets the log level.

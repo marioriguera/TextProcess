@@ -10,7 +10,7 @@ namespace TextProcess.Api.Core.Business.Analyzer
     internal class TextAnalyzerService : ITextAnalyzerService
     {
         /// <inheritdoc/>
-        public ITextStatistics AnalyzeText(string text)
+        public ITextStatistics TextAnalyze(string text)
         {
             if (string.IsNullOrEmpty(text))
             {

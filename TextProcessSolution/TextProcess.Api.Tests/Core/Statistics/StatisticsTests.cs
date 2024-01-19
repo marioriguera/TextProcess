@@ -30,7 +30,7 @@ namespace TextProcess.Api.Tests.Core.Statistics
         public void Statistics_Three_Words_Two_White_Spaces_Cero_Hyphen(string text)
         {
             // Act
-            var result = _textAnalyzer.AnalyzeText(text);
+            var result = _textAnalyzer.TextAnalyze(text);
 
             // Assert
             Assert.Equal(3, (int)result.WordCount);
@@ -49,7 +49,7 @@ namespace TextProcess.Api.Tests.Core.Statistics
         public void Statistics_One_Word_Cero_White_Space_One_Hyphen(string text)
         {
             // Act
-            var result = _textAnalyzer.AnalyzeText(text);
+            var result = _textAnalyzer.TextAnalyze(text);
 
             // Assert
             Assert.Equal(1, (int)result.WordCount);
@@ -67,7 +67,7 @@ namespace TextProcess.Api.Tests.Core.Statistics
         public void Statistics_Cero_Word_Three_White_Space_Two_Hyphen(string text)
         {
             // Act
-            var result = _textAnalyzer.AnalyzeText(text);
+            var result = _textAnalyzer.TextAnalyze(text);
 
             // Assert
             Assert.Equal(0, (int)result.WordCount);
@@ -85,7 +85,7 @@ namespace TextProcess.Api.Tests.Core.Statistics
         public void Statistics_Two_Word_Cero_White_Space_One_Hyphen(string text)
         {
             // Act
-            var result = _textAnalyzer.AnalyzeText(text);
+            var result = _textAnalyzer.TextAnalyze(text);
 
             // Assert
             Assert.Equal(2, (int)result.WordCount);
@@ -102,7 +102,7 @@ namespace TextProcess.Api.Tests.Core.Statistics
         public void Statistics_Cero_Word_Cero_White_Space_Cero_Hyphen(string text)
         {
             // Act
-            var result = _textAnalyzer.AnalyzeText(text);
+            var result = _textAnalyzer.TextAnalyze(text);
 
             // Assert
             Assert.Equal(0, (int)result.WordCount);

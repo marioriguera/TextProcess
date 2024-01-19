@@ -163,7 +163,7 @@ namespace TextProcess.Api.Controllers
             {
                 if (!statisticsOrderRequest.IsValid()) return BadRequest(MessageResponse<object>.Fail(new object()));
 
-                ITextStatistics serviceResult = await Task.Run(() => _textAnalyzerService.AnalyzeText(statisticsOrderRequest.Text));
+                ITextStatistics serviceResult = await Task.Run(() => _textAnalyzerService.TextAnalyze(statisticsOrderRequest.Text));
 
                 return Ok(MessageResponse<ITextStatistics>.Success(serviceResult));
             }

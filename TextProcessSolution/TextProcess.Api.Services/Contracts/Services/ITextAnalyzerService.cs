@@ -12,7 +12,7 @@ namespace TextProcess.Api.Core.Contracts.Services
         /// </summary>
         /// <param name="text">The text to be analyzed.</param>
         /// <returns>An instance of ITextStatistics containing statistics on the provided text.</returns>
-        ITextStatistics AnalyzeText(string text);
+        ITextStatistics TextAnalyze(string text);
 
         /// <summary>
         /// Splits the provided text into an enumerable collection of strings.

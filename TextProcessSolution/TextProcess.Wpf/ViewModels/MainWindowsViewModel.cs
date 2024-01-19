@@ -2,11 +2,10 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
-using NLog.Fluent;
 using TextProcess.Wpf.Commands;
+using TextProcess.Wpf.Configuration;
 
-namespace ProcessText.ViewModels
+namespace TextProcess.Wpf.ViewModels
 {
     /// <summary>
     /// ViewModel for the main window of the application. Manages the user interface, properties, and commands.
@@ -327,7 +326,7 @@ namespace ProcessText.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
+                    ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
                 }
             });
         }
@@ -348,7 +347,7 @@ namespace ProcessText.ViewModels
             }
             catch (Exception ex)
             {
-                Log.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
+                ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
             }
         }
 
@@ -398,7 +397,7 @@ namespace ProcessText.ViewModels
             catch (Exception ex)
             {
                 // Handle the exception as needed (e.g., log or display an error message)
-                Log.Error($"Error updating orders: {ex.Message}");
+                ConfigurationService.Current.Logger.Error($"Error updating orders: {ex.Message}");
             }
         }
 
@@ -449,13 +448,13 @@ namespace ProcessText.ViewModels
             try
             {
                 // Shuts down the application.
-                Log.Fatal($"Execute close application.");
+                ConfigurationService.Current.Logger.Fatal($"Execute close application.");
                 Application.Current.Shutdown();
             }
             catch (Exception ex)
             {
                 // Logs any unhandled exceptions.
-                Log.Error($"An unhandled exception has occurred in {nameof(ExecuteCloseAppCommand)} and the message is: {ex.Message}");
+                ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred in {nameof(ExecuteCloseAppCommand)} and the message is: {ex.Message}");
             }
         }
     }
