@@ -18,7 +18,7 @@
         /// <param name="subdomain">The subdomain of the API endpoint.</param>
         /// <param name="jsonData">The JSON data to be sent in the request body.</param>
         /// <returns>The deserialized response of type <typeparamref name="T"/>.</returns>
-        Task<T?> SendPostRequestAsync<T>(string subdomain, string jsonData);
+        Task<T?> SendPostRequestAsync<T>(string subdomain, object data);
 
         /// <summary>
         /// Sends a GET request to the specified API endpoint asynchronously.

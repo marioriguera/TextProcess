@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Newtonsoft.Json;
 using TextProcess.Wpf.Core.Contracts.Connections;
 
 namespace TextProcess.Wpf.Core.Connections
@@ -8,7 +9,7 @@ namespace TextProcess.Wpf.Core.Connections
     /// </summary>
     internal class HttpManager : IHttpManager
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new();
         private static string _baseUrl = "https://localhost:7062/api/process-text";
 
         /// <inheritdoc/>
@@ -18,12 +19,15 @@ namespace TextProcess.Wpf.Core.Connections
         }
 
         /// <inheritdoc/>
-        public async Task<T?> SendPostRequestAsync<T>(string subdomain, string jsonData)
+        public async Task<T?> SendPostRequestAsync<T>(string subdomain, object data)
         {
             try
             {
+                // Serialize
+                string jsonData = JsonConvert.SerializeObject(data);
+
                 // Create the request content
-                StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 
                 // Build the complete URL with subdomain
                 string apiUrl = $"{_baseUrl}/{subdomain}";

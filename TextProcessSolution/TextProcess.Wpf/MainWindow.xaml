@@ -5,8 +5,150 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextProcess.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Style="{StaticResource PrincipalWindowStyle}" 
+        Icon="/Assets/Document.ico">
+    <Grid DataContext="{DynamicResource MainWindowsViewModelResource}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="8.5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="MenuBar" 
+              Grid.Row="0"
+              Style="{DynamicResource MenuBarStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ProgressBar x:Name="ProgressBar"
+                         Style="{DynamicResource ProgressBarStyle}"
+                         Visibility="{Binding ProgressBarVisibility, IsAsync=True}"/>
+            <Label x:Name="TitleLabel" 
+                   Grid.Column="1"
+                   Content="{Binding Tittle, Converter={StaticResource ToUpperCaseConverterResource}}"
+                   Style="{StaticResource AppTitleLabelStyle}"/>
+            <Button x:Name="CloseButton" 
+                   Grid.Column="2" 
+                   Content="{Binding CloseButtonContent, Converter={StaticResource ToUpperCaseConverterResource}}"
+                   Style="{StaticResource CloseButtonStyle}"
+                   Command="{Binding CloseAppCommand}"/>
+        </Grid>
+        <Grid x:Name="WorkArea" 
+              Grid.Row="1"
+              Style="{DynamicResource WorkArea}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="TextColumn"
+                  Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="9*"/>
+                </Grid.RowDefinitions>
+                <Grid x:Name="InsertTextAndSelectOrder"
+                      Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="InsertTextTittle" 
+                       Grid.Column="0"
+                       Content="{Binding InsertTextTittle}"
+                       Style="{DynamicResource InsertTextTittleLabelStyle}"/>
+                    <Label x:Name="SelectOrderTittle"
+                           Grid.Column="1"
+                           Content="{Binding OrderTittle}"
+                           Style="{DynamicResource OrderTittleLabelStyle}"/>
+                    <ComboBox x:Name="OrderSelection"
+                              Grid.Column="2"
+                              Style="{DynamicResource ComboBoxStyle}"
+                              ItemsSource="{Binding Orders}"
+                              SelectedItem="{Binding SelectedOrder, IsAsync=True}"
+                              />
+                </Grid>
+                <TextBox x:Name="TextArea"
+                         Grid.Row="1"
+                         Text="{Binding TextToProcess}"
+                         Style="{DynamicResource TextBoxStyle}"/>
+            </Grid>
+            <Grid x:Name="OrderColumn"
+                  Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="9*"/>
+                </Grid.RowDefinitions>
+                <Grid x:Name="SelectOrder"
+                      Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="7*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="Analyze"
+                            Grid.Column="0"
+                            Content="Analizar"
+                            Style="{DynamicResource DoTextAnalyze}"
+                            Command="{Binding TextAnalyzeAppCommand}"/>
+                    <Label x:Name="AnalyzeMessage"
+                           Grid.Column="1"
+                           Content="{Binding Message, IsAsync=True}"
+                           Style="{DynamicResource AnalyzeMessageStyle}"/>
+                </Grid>
+                <ListView x:Name="ListOfWords"
+                          Grid.Row="1"
+                          Style="{DynamicResource ListViewStyle}"
+                          ItemsSource="{Binding Lines, IsAsync=True}"
+                          />
+            </Grid>
+        </Grid>
+        <Grid x:Name="StatisticsArea" 
+              Grid.Row="2"
+              Style="{DynamicResource StatisticsArea}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="HyppenColumn" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="HyppenColumnTittle" 
+                       Grid.Row="0" 
+                       Content="{Binding NumberOfHyphenTittle, Converter={StaticResource ToUpperCaseConverterResource}}" 
+                       Style="{DynamicResource TittleStatisticsLabelStyle}"/>
+                <Label x:Name="HyppenColumnValue" 
+                       Grid.Row="1" 
+                       Content="{Binding NumberOfHyphen, IsAsync=True}" 
+                       Style="{DynamicResource ValueStatisticsLabelStyle}"/>
+            </Grid>
+            <Grid x:Name="WordsColumn" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="WordsColumnTittle" 
+                       Grid.Row="0" Content="{Binding NumberOfWordsTittle, Converter={StaticResource ToUpperCaseConverterResource}}" 
+                       Style="{DynamicResource TittleStatisticsLabelStyle}"/>
+                <Label x:Name="WordsColumnValue" 
+                       Grid.Row="1" Content="{Binding NumberOfWords, IsAsync=True}" 
+                       Style="{DynamicResource ValueStatisticsLabelStyle}"/>
+            </Grid>
+            <Grid x:Name="WhiteSpacesColumn" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="WhiteSpacesColumnTittle" 
+                       Grid.Row="0" Content="{Binding NumberOfWhiteSpacesTittle, Converter={StaticResource ToUpperCaseConverterResource}}" 
+                       Style="{DynamicResource TittleStatisticsLabelStyle}"/>
+                <Label x:Name="WhiteSpacesColumnValue" 
+                       Grid.Row="1" Content="{Binding NumberOfWhiteSpaces, IsAsync=True}" 
+                       Style="{DynamicResource ValueStatisticsLabelStyle}"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

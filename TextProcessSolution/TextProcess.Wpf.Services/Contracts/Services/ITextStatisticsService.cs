@@ -12,6 +12,6 @@ namespace TextProcess.Wpf.Core.Contracts.Services
         /// </summary>
         /// <param name="text">The text to be analyzed.</param>
         /// <returns>A task representing the asynchronous operation. The result is the analyzed text statistics.</returns>
-        Task<IMessage<ITextStatistics>?> TextAnalyzeAsync(string text);
+        Task<ITextStatistics> TextAnalyzeAsync(string text);
     }
 }

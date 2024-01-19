@@ -1,9 +1,13 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using TextProcess.Wpf.Commands;
 using TextProcess.Wpf.Configuration;
+using TextProcess.Wpf.Core.Contracts.Models;
+using TextProcess.Wpf.Core.Contracts.Services;
+using TextProcess.Wpf.Models;
 
 namespace TextProcess.Wpf.ViewModels
 {
@@ -15,7 +19,19 @@ namespace TextProcess.Wpf.ViewModels
         #region Fields
 
         // Locks
-        private readonly object _lockText = new object();
+        private readonly object _lockText = new();
+
+        // Services
+        private readonly IOrderService _orderService;
+        private readonly ITextStatisticsService _textStatisticsService;
+
+        // Messages dicctionarie
+        private readonly Dictionary<int, string> _messagesDictionarie = new()
+        {
+            { 1, string.Empty },
+            { 2, $"Tarea realizada." },
+            { 3, $"Ha ocurrido un problema." },
+        };
 
         // Fields for various properties
         private string _tittle;
@@ -32,11 +48,11 @@ namespace TextProcess.Wpf.ViewModels
         private List<ComboBoxItem> _orders;
         private ComboBoxItem _selectedOrder;
         private List<ListViewItem> _lines;
+        private Visibility _progressBarVisibiliTy;
+        private string _message;
 
-        // Services
-        // private readonly IOrderOptionsService _orderOptionsService;
-        // private readonly IOrderFactory _orderFactory;
-        // private readonly ITextAnalyzer _textAnalyser;
+        // Fields for chare information.
+        private List<OrderOption> _ordersOptions = new();
 
         #endregion
 
@@ -47,7 +63,7 @@ namespace TextProcess.Wpf.ViewModels
         {
             Tittle = $"Process Text App";
             CloseButtonContent = $"Cerrar";
-            InsertTextTittle = $"Insertar texto en el cuadro";
+            InsertTextTittle = $"Insertar texto en el cuadro inferior";
             NumberOfHyphenTittle = $"Cantidad de guiones";
             NumberOfWordsTittle = $"Cantidad de palabras";
             NumberOfWhiteSpacesTittle = $"Cantidad de espacios";
@@ -60,17 +76,19 @@ namespace TextProcess.Wpf.ViewModels
             Orders = new List<ComboBoxItem>();
             Lines = new List<ListViewItem>();
 
+            ProgressBarVisibility = Visibility.Visible;
+
             // Initializes commands.
             CloseAppCommand = new RelayCommand<object>(CanExecuteCloseAppCommand, ExecuteCloseAppCommand);
+            TextAnalyzeAppCommand = new RelayCommand<object>(CanExecuteTextAnalyzeAppCommand, ExecuteTextAnalyzeAppCommand);
 
             // Dependencies
-            // if (!ConfigurationService.IsInDesignMode)
-            // {
-            //     _orderOptionsService = ConfigurationService.Current.Host.Services.GetRequiredService<IOrderOptionsService>();
-            //     _orderFactory = ConfigurationService.Current.Host.Services.GetRequiredService<IOrderFactory>();
-            //     _textAnalyser = ConfigurationService.Current.Host.Services.GetRequiredService<ITextAnalyzer>();
-            //     UpdateOrders();
-            // }
+            if (!ConfigurationService.IsInDesignMode)
+            {
+                _orderService = ConfigurationService.Current.Host.Services.GetRequiredService<IOrderService>();
+                _textStatisticsService = ConfigurationService.Current.Host.Services.GetRequiredService<ITextStatisticsService>();
+                _ = UpdateOrdersAsync();
+            }
         }
 
         /// <summary>
@@ -105,7 +123,6 @@ namespace TextProcess.Wpf.ViewModels
                 if (_textToProcess != value)
                 {
                     _textToProcess = value;
-                    DoProcessText();
                     NotifyPropertyChanged(nameof(TextToProcess));
                 }
             }
@@ -187,6 +204,22 @@ namespace TextProcess.Wpf.ViewModels
                 {
                     _orderTittle = value;
                     NotifyPropertyChanged(nameof(OrderTittle));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets message.
+        /// </summary>
+        public string Message
+        {
+            get => _message;
+            set
+            {
+                if (_message != value)
+                {
+                    _message = value;
+                    NotifyPropertyChanged(nameof(Message));
                 }
             }
         }
@@ -298,8 +331,23 @@ namespace TextProcess.Wpf.ViewModels
                 if (_selectedOrder != value)
                 {
                     _selectedOrder = value;
-                    DoProcessText();
                     NotifyPropertyChanged(nameof(SelectedOrder));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets progress bar visibility.
+        /// </summary>
+        public Visibility ProgressBarVisibility
+        {
+            get => _progressBarVisibiliTy;
+            set
+            {
+                if (_progressBarVisibiliTy != value)
+                {
+                    _progressBarVisibiliTy = value;
+                    NotifyPropertyChanged(nameof(ProgressBarVisibility));
                 }
             }
         }
@@ -310,40 +358,49 @@ namespace TextProcess.Wpf.ViewModels
         public RelayCommand<object> CloseAppCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets text analyze.
+        /// </summary>
+        public RelayCommand<object> TextAnalyzeAppCommand { get; set; }
+
+        /// <summary>
         /// Processes the text based on the selected order and updates the UI with the ordered lines.
         /// </summary>
-        private void DoProcessText()
+        private Task DoProcessTextAsync()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            _ = Application.Current.Dispatcher.Invoke(async () =>
             {
                 try
                 {
-                    if (SelectedOrder == null || TextToProcess == null) return;
+                    if (SelectedOrder == null || string.IsNullOrEmpty(TextToProcess)) return;
 
-                    IEnumerable<string> lines = null; // _orderFactory.GetOrderText(SelectedOrder.Name, TextToProcess);
+                    OrderText orderText = new(TextToProcess, _ordersOptions.First(x => x.Name.Equals(SelectedOrder.Name)).Id);
+
+                    IEnumerable<string> lines = await _orderService.OrderAsync(orderText);
                     UpdateLines(lines);
-                    UpdateStatistics();
+                    await UpdateStatisticsAsync();
                 }
                 catch (Exception ex)
                 {
                     ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
+                    Message = GetMessage(3);
                 }
             });
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Updates statistics based on the processed text and selected order.
         /// </summary>
-        private void UpdateStatistics()
+        private async Task UpdateStatisticsAsync()
         {
             try
             {
-                // var statistics = _textAnalyser.AnalyzeText(TextToProcess);
-                // 
-                // // Update statistics properties
-                // NumberOfHyphen = statistics.HyphenCount;
-                // NumberOfWords = statistics.WordCount;
-                // NumberOfWhiteSpaces = statistics.SpaceCount;
+                var statistics = await _textStatisticsService.TextAnalyzeAsync(TextToProcess);
+
+                // Update statistics properties
+                NumberOfHyphen = statistics.HyphenCount;
+                NumberOfWords = statistics.WordCount;
+                NumberOfWhiteSpaces = statistics.SpaceCount;
             }
             catch (Exception ex)
             {
@@ -378,26 +435,32 @@ namespace TextProcess.Wpf.ViewModels
         /// <summary>
         /// Updates the Orders collection based on the available order options.
         /// </summary>
-        private void UpdateOrders()
+        private async Task UpdateOrdersAsync()
         {
             try
             {
+                ProgressBarVisibility = Visibility.Visible;
+
                 // // Get the order options from the service
-                // List<IOrderOption> orderOptions = _orderOptionsService.GetOrderOptions().ToList();
-                // 
-                // // Clear the existing Orders collection
-                // Orders.Clear();
-                // 
-                // // Add new items to the collection
-                // foreach (var option in orderOptions)
-                // {
-                //     AddComboBoxItem(option);
-                // }
+                var orders = await _orderService.GetOrderOptionsAsync();
+
+                // Clear the existing Orders collection
+                Orders.Clear();
+
+                // Add new items to the collection
+                foreach (IOrderOption option in orders)
+                {
+                    AddComboBoxItem(option);
+                    _ordersOptions.Add(new(option.Id, option.Name, option.Description));
+                }
+
+                ProgressBarVisibility = Visibility.Hidden;
             }
             catch (Exception ex)
             {
                 // Handle the exception as needed (e.g., log or display an error message)
                 ConfigurationService.Current.Logger.Error($"Error updating orders: {ex.Message}");
+                ProgressBarVisibility = Visibility.Hidden;
             }
         }
 
@@ -405,20 +468,20 @@ namespace TextProcess.Wpf.ViewModels
         /// Adds a ComboBoxItem to the Orders collection based on the provided order option.
         /// </summary>
         /// <param name="orderOption">The order option to add to the collection.</param>
-        // private void AddComboBoxItem(IOrderOption orderOption)
-        // {
-        //     // Add a new ComboBoxItem to the Orders collection
-        //     Orders.Add(new ComboBoxItem()
-        //     {
-        //         Content = orderOption.Description,
-        //         Name = orderOption.Name,
-        //         HorizontalAlignment = HorizontalAlignment.Stretch,
-        //         VerticalAlignment = VerticalAlignment.Center,
-        //         HorizontalContentAlignment = HorizontalAlignment.Stretch,
-        //         VerticalContentAlignment = VerticalAlignment.Center,
-        //         FontSize = 30,
-        //     });
-        // }
+        private void AddComboBoxItem(IOrderOption orderOption)
+        {
+            // Add a new ComboBoxItem to the Orders collection
+            Orders.Add(new ComboBoxItem()
+            {
+                Content = orderOption.Description,
+                Name = orderOption.Name,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                FontSize = 20,
+            });
+        }
 
         /// <summary>
         /// Called by Set accessor of each property that needs to notify it's value has changed.
@@ -455,6 +518,57 @@ namespace TextProcess.Wpf.ViewModels
             {
                 // Logs any unhandled exceptions.
                 ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred in {nameof(ExecuteCloseAppCommand)} and the message is: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Executes the Text Analyze App command asynchronously.
+        /// </summary>
+        /// <param name="parameter">The command parameter.</param>
+        private void ExecuteTextAnalyzeAppCommand(object parameter)
+        {
+            try
+            {
+                // Execute text analyze asynchronously.
+                Task.Run(async () =>
+                {
+                    ProgressBarVisibility = Visibility.Visible;
+                    await DoProcessTextAsync();
+                    ProgressBarVisibility = Visibility.Hidden;
+                });
+            }
+            catch (Exception ex)
+            {
+                // Logs any unhandled exceptions.
+                ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred in {nameof(ExecuteTextAnalyzeAppCommand)} and the message is: {ex.Message}");
+                ProgressBarVisibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the Text Analyze App command can be executed.
+        /// </summary>
+        /// <param name="parameter">The command parameter.</param>
+        /// <returns><c>true</c> if the command can be executed; otherwise, <c>false</c>.</returns>
+        private bool CanExecuteTextAnalyzeAppCommand(object parameter)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the message for the specified key.
+        /// </summary>
+        /// <param name="key">The key of the message.</param>
+        /// <returns>The message corresponding to the key, or an empty string if not found.</returns>
+        private string GetMessage(int key)
+        {
+            if (_messagesDictionarie.TryGetValue(key, out var value))
+            {
+                return value;
+            }
+            else
+            {
+                return string.Empty;
             }
         }
     }

@@ -11,13 +11,13 @@ namespace TextProcess.Wpf.Core.Contracts.Services
         /// Retrieves available order options asynchronously.
         /// </summary>
         /// <returns>A task representing the asynchronous operation that returns a collection of order options.</returns>
-        Task<IMessage<IEnumerable<IOrderOption>>?> GetOrderOptionsAsync();
+        Task<IEnumerable<IOrderOption>> GetOrderOptionsAsync();
 
         /// <summary>
         /// Orders the specified text asynchronously based on the selected options.
         /// </summary>
         /// <param name="text">The text to be ordered.</param>
         /// <returns>A task representing the asynchronous operation that returns a collection of ordered strings.</returns>
-        Task<IMessage<IEnumerable<string>>?> OrderAsync(IOrderText text);
+        Task<IEnumerable<string>> OrderAsync(IOrderText text);
     }
 }

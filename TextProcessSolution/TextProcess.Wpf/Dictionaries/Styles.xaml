@@ -60,7 +60,7 @@
 
     <Style x:Key="InsertTextTittleLabelStyle" BasedOn="{StaticResource LabelStyle}" TargetType="Label">
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="FontSize" Value="35"/>
+        <Setter Property="FontSize" Value="25"/>
         <Setter Property="Foreground" Value="{DynamicResource Midnightblue_Brush}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -68,6 +68,15 @@
     </Style>
 
     <Style x:Key="OrderTittleLabelStyle" BasedOn="{StaticResource InsertTextTittleLabelStyle}" TargetType="Label">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <Style x:Key="AnalyzeMessageStyle" BasedOn="{StaticResource LabelStyle}" TargetType="Label">
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Foreground" Value="{DynamicResource Wetasphalt_Brush}"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
     </Style>
     <!--#endregion-->
@@ -81,7 +90,6 @@
     </Style>
 
     <Style x:Key="CloseButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
-        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="10"/>
         <Setter Property="Foreground" Value="{DynamicResource Clouds_Brush}"/>
         <Setter Property="Background" Value="{DynamicResource Alizarin_Brush}"/>
@@ -90,6 +98,15 @@
         <Setter Property="Margin" Value="0 0 10 0"/>
         <Setter Property="Width" Value="80"/>
         <Setter Property="Height" Value="30"/>
+    </Style>
+
+    <Style x:Key="DoTextAnalyze" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Width" Value="150"/>
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{DynamicResource Clouds_Brush}"/>
+        <Setter Property="Background" Value="{DynamicResource Nephritis_Brush}"/>
     </Style>
     <!--#endregion-->
 
@@ -114,12 +131,24 @@
 
     <!--#region Combo boxes-->
     <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
-        <Setter Property="Margin" Value="10 20 10 10"/>
+        <Setter Property="Margin" Value="10 10 10 10"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Height" Value="45"/>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Combo boxes-->
+    <Style x:Key="ProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="IsIndeterminate" Value="True" />
+        <Setter Property="Margin" Value="10 15 10 15"/>
+        <Setter Property="Background" Value="{DynamicResource Turquoise_Brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Turquoise_Brush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource Greensea_Brush}"/>
     </Style>
     <!--#endregion-->
 </ResourceDictionary>

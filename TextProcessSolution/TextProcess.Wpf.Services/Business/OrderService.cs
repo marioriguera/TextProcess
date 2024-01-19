@@ -28,18 +28,21 @@ namespace TextProcess.Wpf.Core.Business
         }
 
         /// <inheritdoc/>
-        public async Task<IMessage<IEnumerable<IOrderOption>>?> GetOrderOptionsAsync()
+        public async Task<IEnumerable<IOrderOption>> GetOrderOptionsAsync()
         {
-            IMessage<IEnumerable<IOrderOption>>? result = (IMessage<IEnumerable<IOrderOption>>?)await _httpManager.SendGetRequestAsync<MessageResponse<List<OrderOptionResponse>>>($"orders-options");
+            MessageResponse<List<OrderOptionResponse>>? response = await _httpManager.SendGetRequestAsync<MessageResponse<List<OrderOptionResponse>>>($"orders-options");
+            List<OrderOptionResponse> result = new();
+            if (response != null) result = (List<OrderOptionResponse>)(response.Message ?? Enumerable.Empty<OrderOptionResponse>());
             return result;
         }
 
         /// <inheritdoc/>
-        public async Task<IMessage<IEnumerable<string>>?> OrderAsync(IOrderText text)
+        public async Task<IEnumerable<string>> OrderAsync(IOrderText text)
         {
-            OrderTextRequest cleanText = new OrderTextRequest() { TextToOrder = _textManager.RemoveLineBreaks(text.TextToOrder), OrderOption = text.OrderOption };
-            // ToDo: me quede por aqui. Debo hacer que cada clase de request sea capaz de serializar el objeto y llevarlo a un string.
-            IMessage<IEnumerable<string>>? result = (IMessage<IEnumerable<string>>?)(await _httpManager.SendPostRequestAsync<MessageResponse<List<string>>>($"order-text", "cleanText"));
+            OrderTextRequest cleanText = new() { TextToOrder = _textManager.RemoveLineBreaks(text.TextToOrder), OrderOption = text.OrderOption };
+            MessageResponse<List<string>>? response = await _httpManager.SendPostRequestAsync<MessageResponse<List<string>>>($"order-text", cleanText);
+            List<string> result = new();
+            if (response != null) result = (List<string>)(response.Message ?? Enumerable.Empty<string>());
             return result;
         }
     }

@@ -2,6 +2,7 @@
 using TextProcess.Wpf.Core.Contracts.Models;
 using TextProcess.Wpf.Core.Contracts.Services;
 using TextProcess.Wpf.Core.Contracts.Utils;
+using TextProcess.Wpf.Core.Models.Request;
 using TextProcess.Wpf.Core.Models.Response;
 
 namespace TextProcess.Wpf.Core.Business
@@ -26,10 +27,12 @@ namespace TextProcess.Wpf.Core.Business
         }
 
         /// <inheritdoc/>
-        public async Task<IMessage<ITextStatistics>?> TextAnalyzeAsync(string text)
+        public async Task<ITextStatistics> TextAnalyzeAsync(string text)
         {
             string cleanText = _textManager.RemoveLineBreaks(text);
-            IMessage<ITextStatistics>? result = (IMessage<ITextStatistics>?)(await _httpManager.SendPostRequestAsync<MessageResponse<TextStatisticsResponse>>($"text-statistics", cleanText));
+            MessageResponse<TextStatisticsResponse>? response = await _httpManager.SendPostRequestAsync<MessageResponse<TextStatisticsResponse>>($"text-statistics", new TextRequest(cleanText));
+            TextStatisticsResponse result = new();
+            if (response != null) result = new(response.Message!.WordCount, response.Message!.SpaceCount, response.Message!.HyphenCount);
             return result;
         }
     }
