@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an interface for managing HTTP requests.
     /// </summary>
-    internal interface IHttpManager
+    public interface IHttpManager
     {
         /// <summary>
         /// Changes the base URL for API requests.
