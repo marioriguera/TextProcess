@@ -20,6 +20,7 @@ namespace TextProcess.Wpf.Core.Connections
 
         /// <inheritdoc/>
         public async Task<T?> SendPostRequestAsync<T>(string subdomain, object data)
+            where T : class
         {
             try
             {
@@ -58,6 +59,7 @@ namespace TextProcess.Wpf.Core.Connections
 
         /// <inheritdoc/>
         public async Task<T?> SendGetRequestAsync<T>(string subdomain)
+            where T : class
         {
             try
             {
