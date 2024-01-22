@@ -31,9 +31,14 @@ namespace TextProcess.Wpf.Core.Business
         {
             string cleanText = _textManager.RemoveLineBreaks(text);
             MessageResponse<TextStatisticsResponse>? response = await _httpManager.SendPostRequestAsync<MessageResponse<TextStatisticsResponse>>($"text-statistics", new TextRequest(cleanText));
-            TextStatisticsResponse result = new();
-            if (response != null) result = new(response.Message!.WordCount, response.Message!.SpaceCount, response.Message!.HyphenCount);
-            return result;
+            if (response != null)
+            {
+                if (response.IsSuccess) return new TextStatisticsResponse(response.Message!.WordCount, response.Message!.SpaceCount, response.Message!.HyphenCount);
+
+                throw new Exception($"In function {nameof(TextAnalyzeAsync)}, the {nameof(response)} was not success.");
+            }
+
+            throw new ArgumentNullException($"In function {nameof(TextAnalyzeAsync)}, the {nameof(response)} is null.");
         }
     }
 }

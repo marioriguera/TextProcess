@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TextProcess.Wpf.Core.Contracts.Connections;
+﻿using TextProcess.Wpf.Core.Contracts.Connections;
 using TextProcess.Wpf.Core.Contracts.Models;
 using TextProcess.Wpf.Core.Contracts.Services;
 using TextProcess.Wpf.Core.Contracts.Utils;
@@ -31,9 +30,14 @@ namespace TextProcess.Wpf.Core.Business
         public async Task<IEnumerable<IOrderOption>> GetOrderOptionsAsync()
         {
             MessageResponse<List<OrderOptionResponse>>? response = await _httpManager.SendGetRequestAsync<MessageResponse<List<OrderOptionResponse>>>($"orders-options");
-            List<OrderOptionResponse> result = new();
-            if (response != null) result = (List<OrderOptionResponse>)(response.Message ?? Enumerable.Empty<OrderOptionResponse>());
-            return result;
+            if (response != null)
+            {
+                if (response.IsSuccess) return (List<OrderOptionResponse>)(response.Message ?? Enumerable.Empty<OrderOptionResponse>());
+
+                throw new Exception($"In function {nameof(GetOrderOptionsAsync)}, the {nameof(response)} was not success.");
+            }
+
+            throw new ArgumentNullException($"In function {nameof(GetOrderOptionsAsync)}, the {nameof(response)} is null.");
         }
 
         /// <inheritdoc/>
@@ -41,9 +45,14 @@ namespace TextProcess.Wpf.Core.Business
         {
             OrderTextRequest cleanText = new() { TextToOrder = _textManager.RemoveLineBreaks(text.TextToOrder), OrderOption = text.OrderOption };
             MessageResponse<List<string>>? response = await _httpManager.SendPostRequestAsync<MessageResponse<List<string>>>($"order-text", cleanText);
-            List<string> result = new();
-            if (response != null) result = (List<string>)(response.Message ?? Enumerable.Empty<string>());
-            return result;
+            if (response != null)
+            {
+                if(response.IsSuccess) return (List<string>)(response.Message ?? Enumerable.Empty<string>());
+
+                throw new Exception($"In function {nameof(OrderAsync)}, the {nameof(response)} was not success.");
+            }
+
+            throw new ArgumentNullException($"In function {nameof(OrderAsync)}, the {nameof(response)} is null.");
         }
     }
 }

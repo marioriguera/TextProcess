@@ -1,7 +1,7 @@
 ﻿namespace TextProcess.Wpf.Core.Contracts.Connections
 {
     /// <summary>
-    /// Represents an interface for managing HTTP requests to a specified API endpoint.
+    /// Represents an interface for managing HTTP requests.
     /// </summary>
     internal interface IHttpManager
     {
@@ -16,7 +16,7 @@
         /// </summary>
         /// <typeparam name="T">The type of the expected response.</typeparam>
         /// <param name="subdomain">The subdomain of the API endpoint.</param>
-        /// <param name="jsonData">The JSON data to be sent in the request body.</param>
+        /// <param name="data">The data to be sent in the request body.</param>
         /// <returns>The deserialized response of type <typeparamref name="T"/>.</returns>
         Task<T?> SendPostRequestAsync<T>(string subdomain, object data);
 

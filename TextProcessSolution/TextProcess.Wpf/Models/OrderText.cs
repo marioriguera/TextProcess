@@ -1,4 +1,5 @@
-﻿using TextProcess.Wpf.Core.Contracts.Models;
+﻿using System.Text;
+using TextProcess.Wpf.Core.Contracts.Models;
 
 namespace TextProcess.Wpf.Models
 {
@@ -23,5 +24,19 @@ namespace TextProcess.Wpf.Models
 
         /// <inheritdoc/>
         public int OrderOption { get; set; } = int.MinValue;
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(nameof(TextToOrder));
+            sb.Append(" : ");
+            sb.Append(TextToOrder);
+            sb.Append(" and ");
+            sb.Append(nameof(OrderOption));
+            sb.Append(" : ");
+            sb.Append(OrderOption);
+            return sb.ToString();
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace TextProcess.Wpf.ViewModels
         private string _textToProcess = string.Empty;
         private string _insertTextTittle = string.Empty;
         private string _orderTittle = string.Empty;
+        private string _analyzeTittle = string.Empty;
         private List<ComboBoxItem> _orders = new();
         private ComboBoxItem _selectedOrder = new();
         private List<ListViewItem> _lines = new();
@@ -61,22 +62,10 @@ namespace TextProcess.Wpf.ViewModels
         /// </summary>
         public MainWindowsViewModel()
         {
-            Tittle = $"Process Text App";
-            CloseButtonContent = $"Cerrar";
-            InsertTextTittle = $"Insertar texto en el cuadro inferior";
-            NumberOfHyphenTittle = $"Cantidad de guiones";
-            NumberOfWordsTittle = $"Cantidad de palabras";
-            NumberOfWhiteSpacesTittle = $"Cantidad de espacios";
-            OrderTittle = $"Orden";
-
-            NumberOfHyphen = ulong.MinValue;
-            NumberOfWords = ulong.MinValue;
-            NumberOfWhiteSpaces = ulong.MinValue;
+            TitleInitializer();
 
             Orders = new List<ComboBoxItem>();
             Lines = new List<ListViewItem>();
-
-            ProgressBarVisibility = Visibility.Visible;
 
             // Initializes commands.
             CloseAppCommand = new RelayCommand<object>(CanExecuteCloseAppCommand, ExecuteCloseAppCommand);
@@ -204,6 +193,22 @@ namespace TextProcess.Wpf.ViewModels
                 {
                     _orderTittle = value;
                     NotifyPropertyChanged(nameof(OrderTittle));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets analyze button tittle.
+        /// </summary>
+        public string AnalyzeTittle
+        {
+            get => _analyzeTittle;
+            set
+            {
+                if (_analyzeTittle != value)
+                {
+                    _analyzeTittle = value;
+                    NotifyPropertyChanged(nameof(AnalyzeTittle));
                 }
             }
         }
@@ -362,30 +367,16 @@ namespace TextProcess.Wpf.ViewModels
         /// </summary>
         public RelayCommand<object> TextAnalyzeAppCommand { get; set; }
 
-        /// <summary>
-        /// Processes the text based on the selected order and updates the UI with the ordered lines.
-        /// </summary>
-        private Task DoProcessTextAsync()
+        private void TitleInitializer()
         {
-            _ = Application.Current.Dispatcher.Invoke(async () =>
-            {
-                try
-                {
-                    if (SelectedOrder == null || string.IsNullOrEmpty(TextToProcess)) return;
-
-                    OrderText orderText = new(TextToProcess, _ordersOptions.First(x => x.Name.Equals(SelectedOrder.Name)).Id);
-
-                    IEnumerable<string> lines = await _orderService!.OrderAsync(orderText);
-                    UpdateLines(lines);
-                    await UpdateStatisticsAsync();
-                }
-                catch (Exception ex)
-                {
-                    ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
-                    Message = GetMessage(3);
-                }
-            });
-            return Task.CompletedTask;
+            Tittle = $"Process Text App";
+            CloseButtonContent = $"Cerrar";
+            InsertTextTittle = $"Insertar texto en el cuadro inferior";
+            NumberOfHyphenTittle = $"Cantidad de guiones";
+            NumberOfWordsTittle = $"Cantidad de palabras";
+            NumberOfWhiteSpacesTittle = $"Cantidad de espacios";
+            OrderTittle = $"Orden";
+            AnalyzeTittle = $"Analizar";
         }
 
         /// <summary>
@@ -404,32 +395,51 @@ namespace TextProcess.Wpf.ViewModels
             }
             catch (Exception ex)
             {
-                ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}. Message: {ex.Message}.");
+                ConfigurationService.Current.Logger.Fatal(ex, $"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}.");
+
+                // Hidden progess bar
+                ProgressBarVisibility = Visibility.Hidden;
             }
         }
 
         /// <summary>
         /// Updates the UI with the provided lines after processing.
         /// </summary>
-        /// <param name="lines">The ordered lines to be displayed in the UI.</param>
-        private void UpdateLines(IEnumerable<string> lines)
+        private async Task UpdateLines()
         {
-            Lines.Clear();
+            // Cast selected ordet to OrderText
+            OrderText orderText = new(TextToProcess, _ordersOptions.First(x => x.Name.Equals(SelectedOrder.Name)).Id);
+            IEnumerable<string> lines = new List<string>();
 
-            foreach (string line in lines)
+            try
             {
-                Lines.Add(new ListViewItem()
-                {
-                    Content = line,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalContentAlignment = HorizontalAlignment.Left,
-                    VerticalContentAlignment = VerticalAlignment.Center,
-                    FontSize = 25,
-                });
-            }
+                Lines.Clear();
 
-            NotifyPropertyChanged(nameof(Lines));
+                // Transform text to a enumerable of strigs.
+                lines = await _orderService!.OrderAsync(orderText);
+
+                foreach (string line in lines)
+                {
+                    Lines.Add(new ListViewItem()
+                    {
+                        Content = line,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        FontSize = 25,
+                    });
+                }
+
+                NotifyPropertyChanged(nameof(Lines));
+            }
+            catch (Exception ex)
+            {
+                ConfigurationService.Current.Logger.Fatal(ex, $"An unhandled exception has occurred processing the text: {UpdateLines} with order {SelectedOrder.Name}. {nameof(orderText)} = {orderText?.ToString()} , {nameof(lines)} = {string.Join(", ", lines)} .");
+
+                // Hidden progess bar
+                ProgressBarVisibility = Visibility.Hidden;
+            }
         }
 
         /// <summary>
@@ -455,12 +465,14 @@ namespace TextProcess.Wpf.ViewModels
                 }
 
                 ProgressBarVisibility = Visibility.Hidden;
+                Message = GetMessage(2);
             }
             catch (Exception ex)
             {
                 // Handle the exception as needed (e.g., log or display an error message)
                 ConfigurationService.Current.Logger.Error($"Error updating orders: {ex.Message}");
                 ProgressBarVisibility = Visibility.Hidden;
+                Message = GetMessage(3);
             }
         }
 
@@ -529,18 +541,41 @@ namespace TextProcess.Wpf.ViewModels
         {
             try
             {
-                // Execute text analyze asynchronously.
-                Task.Run(async () =>
+                // Do process text.
+                _ = Application.Current.Dispatcher.Invoke(async () =>
                 {
+                    // Show progress bar
                     ProgressBarVisibility = Visibility.Visible;
-                    await DoProcessTextAsync();
+
+                    // Validate selected order and text to process.
+                    if (SelectedOrder.Content == null || string.IsNullOrEmpty(TextToProcess))
+                    {
+                        // Hidden progess bar
+                        ProgressBarVisibility = Visibility.Hidden;
+                        Message = GetMessage(1);
+                        return;
+                    }
+
+                    // Update statistics.
+                    // Update lines.
+                    await Task.WhenAll(UpdateStatisticsAsync(), UpdateLines());
+
+                    // Show success mesagge
+                    Message = GetMessage(2);
+
+                    // Hidden progess bar
                     ProgressBarVisibility = Visibility.Hidden;
                 });
             }
             catch (Exception ex)
             {
                 // Logs any unhandled exceptions.
-                ConfigurationService.Current.Logger.Error($"An unhandled exception has occurred in {nameof(ExecuteTextAnalyzeAppCommand)} and the message is: {ex.Message}");
+                ConfigurationService.Current.Logger.Fatal(ex, $"An unhandled exception has occurred in {nameof(ExecuteTextAnalyzeAppCommand)} .");
+
+                // Show fail mesagge
+                Message = GetMessage(3);
+
+                // Hidden progess bar
                 ProgressBarVisibility = Visibility.Hidden;
             }
         }
