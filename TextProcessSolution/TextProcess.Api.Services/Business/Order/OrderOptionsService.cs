@@ -9,7 +9,7 @@ namespace TextProcess.Api.Core.Business.Order
     /// </summary>
     internal class OrderOptionsService : IOrderOptionsService
     {
-        private readonly List<IOrderOption> _orderOptions = new List<IOrderOption>()
+        private readonly List<IOrderOption> _orderOptions = new()
         {
                                         { new OrderOption(1, "AlphabeticAsc", "Alfabetico ascendente") },
                                         { new OrderOption(2, "AlphabeticDesc", "Alfabetico descendente") },

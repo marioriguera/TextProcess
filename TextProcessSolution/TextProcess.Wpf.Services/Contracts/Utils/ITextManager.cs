@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines the contract for a manager responsible for text manipulation.
     /// </summary>
-    public interface ITextManager
+    internal interface ITextManager
     {
         /// <summary>
         /// Removes line breaks from the specified input text.

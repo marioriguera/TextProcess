@@ -17,7 +17,7 @@ namespace TextProcess.Api.Core.Business.Analyzer
                 return new TextStatistics(); // Returns an empty object if the string is null or empty
             }
 
-            TextStatistics statistics = new TextStatistics();
+            TextStatistics statistics = new();
 
             // Count words
             string[] words = SplitText(text).ToArray();

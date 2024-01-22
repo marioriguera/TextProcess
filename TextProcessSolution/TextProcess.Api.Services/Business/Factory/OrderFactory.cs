@@ -34,22 +34,18 @@ namespace TextProcess.Api.Core.Business.Factory
         /// <returns>An instance of the IOrder interface corresponding to the specified order.</returns>
         private IOrderService GetInstance(int orderId)
         {
-            switch (orderId)
+            return orderId switch
             {
                 // AlphabeticAsc
-                case 1:
-                    return new AlphabeticAscOrder();
+                1 => new AlphabeticAscOrder(),
 
                 // AlphabeticDesc
-                case 2:
-                    return new AlphabeticDescOrder();
+                2 => new AlphabeticDescOrder(),
 
                 // LengthAsc
-                case 3:
-                    return new LengthAscOrder();
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(orderId), "Not a valid order option.");
-            }
+                3 => new LengthAscOrder(),
+                _ => throw new ArgumentOutOfRangeException(nameof(orderId), "Not a valid order option."),
+            };
         }
     }
 }
