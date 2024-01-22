@@ -1,6 +1,4 @@
-﻿using TextProcess.Api.Core.Contracts.Models;
-
-namespace TextProcess.Api.Core.Contracts.Services
+﻿namespace TextProcess.Api.Core.Contracts.Services
 {
     /// <summary>
     /// Defines the contract for an order service.

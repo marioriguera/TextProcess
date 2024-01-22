@@ -47,7 +47,7 @@ namespace TextProcess.Wpf.Core.Business
             MessageResponse<List<string>>? response = await _httpManager.SendPostRequestAsync<MessageResponse<List<string>>>($"order-text", cleanText);
             if (response != null)
             {
-                if(response.IsSuccess) return (List<string>)(response.Message ?? Enumerable.Empty<string>());
+                if (response.IsSuccess) return (List<string>)(response.Message ?? Enumerable.Empty<string>());
 
                 throw new Exception($"In function {nameof(OrderAsync)}, the {nameof(response)} was not success.");
             }
