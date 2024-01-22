@@ -25,6 +25,9 @@ namespace TextProcess.Wpf.ViewModels
         private readonly IOrderService? _orderService;
         private readonly ITextStatisticsService? _textStatisticsService;
 
+        // Fields for chare information.
+        private readonly List<OrderOption> _ordersOptions = new();
+
         // Messages dicctionarie
         private readonly Dictionary<int, string> _messagesDictionarie = new()
         {
@@ -51,9 +54,6 @@ namespace TextProcess.Wpf.ViewModels
         private List<ListViewItem> _lines = new();
         private Visibility _progressBarVisibiliTy = Visibility.Visible;
         private string _message = string.Empty;
-
-        // Fields for chare information.
-        private List<OrderOption> _ordersOptions = new();
 
         #endregion
 

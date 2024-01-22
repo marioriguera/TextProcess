@@ -15,9 +15,9 @@ namespace TextProcess.Api.Controllers
     [Route("api/process-text")]
     public class ProcessTextController : Controller
     {
-        private IOrderOptionsService _orderOptionsService;
-        private IOrderFactory _orderFactory;
-        private ITextAnalyzerService _textAnalyzerService;
+        private readonly IOrderOptionsService _orderOptionsService;
+        private readonly IOrderFactory _orderFactory;
+        private readonly ITextAnalyzerService _textAnalyzerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessTextController"/> class.

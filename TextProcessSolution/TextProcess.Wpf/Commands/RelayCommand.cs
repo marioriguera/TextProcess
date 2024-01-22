@@ -35,12 +35,7 @@ namespace TextProcess.Wpf.Commands
         /// <param name="execute">The execution logic.</param>
         public RelayCommand(Predicate<T> canExecute, Action<T> execute)
         {
-            if (execute == null)
-            {
-                throw new ArgumentNullException("execute");
-            }
-
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 

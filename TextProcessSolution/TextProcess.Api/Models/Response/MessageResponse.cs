@@ -28,9 +28,11 @@
         /// <returns>An immutable instance of <see cref="MessageResponse{T}"/> with a failed status and content.</returns>
         public static MessageResponse<T> Fail(T content)
         {
-            MessageResponse<T> messageResponse = new MessageResponse<T>();
-            messageResponse.IsSuccess = false;
-            messageResponse.Message = content;
+            MessageResponse<T> messageResponse = new()
+            {
+                IsSuccess = false,
+                Message = content,
+            };
             return messageResponse;
         }
 
@@ -41,9 +43,11 @@
         /// <returns>An immutable instance of <see cref="MessageResponse{T}"/> with a successful status and content.</returns>
         public static MessageResponse<T> Success(T content)
         {
-            MessageResponse<T> messageResponse = new MessageResponse<T>();
-            messageResponse.IsSuccess = true;
-            messageResponse.Message = content;
+            MessageResponse<T> messageResponse = new()
+            {
+                IsSuccess = true,
+                Message = content,
+            };
             return messageResponse;
         }
     }

@@ -28,7 +28,7 @@ namespace TextProcess.Wpf.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(nameof(TextToOrder));
             sb.Append(" : ");
             sb.Append(TextToOrder);
