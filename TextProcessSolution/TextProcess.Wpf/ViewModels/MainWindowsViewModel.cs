@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using TextProcess.Wpf.Commands;
 using TextProcess.Wpf.Configuration;
 using TextProcess.Wpf.Core.Contracts.Models;
@@ -22,8 +22,8 @@ namespace TextProcess.Wpf.ViewModels
         private readonly object _lockText = new();
 
         // Services
-        private readonly IOrderService _orderService;
-        private readonly ITextStatisticsService _textStatisticsService;
+        private readonly IOrderService? _orderService;
+        private readonly ITextStatisticsService? _textStatisticsService;
 
         // Messages dicctionarie
         private readonly Dictionary<int, string> _messagesDictionarie = new()
@@ -34,22 +34,22 @@ namespace TextProcess.Wpf.ViewModels
         };
 
         // Fields for various properties
-        private string _tittle;
-        private string _closeButtonContent;
-        private ulong _numberOfHyphen;
-        private ulong _numberOfWords;
-        private ulong _numberOfWhiteSpaces;
-        private string _numberOfHyphenTittle;
-        private string _numberOfWordsTittle;
-        private string _numberOfWhiteSpacesTittle;
-        private string _textToProcess;
-        private string _insertTextTittle;
-        private string _orderTittle;
-        private List<ComboBoxItem> _orders;
-        private ComboBoxItem _selectedOrder;
-        private List<ListViewItem> _lines;
-        private Visibility _progressBarVisibiliTy;
-        private string _message;
+        private string _tittle = string.Empty;
+        private string _closeButtonContent = string.Empty;
+        private ulong _numberOfHyphen = ulong.MinValue;
+        private ulong _numberOfWords = ulong.MinValue;
+        private ulong _numberOfWhiteSpaces = ulong.MinValue;
+        private string _numberOfHyphenTittle = string.Empty;
+        private string _numberOfWordsTittle = string.Empty;
+        private string _numberOfWhiteSpacesTittle = string.Empty;
+        private string _textToProcess = string.Empty;
+        private string _insertTextTittle = string.Empty;
+        private string _orderTittle = string.Empty;
+        private List<ComboBoxItem> _orders = new();
+        private ComboBoxItem _selectedOrder = new();
+        private List<ListViewItem> _lines = new();
+        private Visibility _progressBarVisibiliTy = Visibility.Visible;
+        private string _message = string.Empty;
 
         // Fields for chare information.
         private List<OrderOption> _ordersOptions = new();
@@ -85,8 +85,8 @@ namespace TextProcess.Wpf.ViewModels
             // Dependencies
             if (!ConfigurationService.IsInDesignMode)
             {
-                _orderService = ConfigurationService.Current.Host.Services.GetRequiredService<IOrderService>();
-                _textStatisticsService = ConfigurationService.Current.Host.Services.GetRequiredService<ITextStatisticsService>();
+                _orderService = ConfigurationService.Current.Host!.Services.GetRequiredService<IOrderService>();
+                _textStatisticsService = ConfigurationService.Current.Host!.Services.GetRequiredService<ITextStatisticsService>();
                 _ = UpdateOrdersAsync();
             }
         }
@@ -94,7 +94,7 @@ namespace TextProcess.Wpf.ViewModels
         /// <summary>
         /// Subscribe for property changed events.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Gets or sets a text value of app tittle.
@@ -375,7 +375,7 @@ namespace TextProcess.Wpf.ViewModels
 
                     OrderText orderText = new(TextToProcess, _ordersOptions.First(x => x.Name.Equals(SelectedOrder.Name)).Id);
 
-                    IEnumerable<string> lines = await _orderService.OrderAsync(orderText);
+                    IEnumerable<string> lines = await _orderService!.OrderAsync(orderText);
                     UpdateLines(lines);
                     await UpdateStatisticsAsync();
                 }
@@ -395,7 +395,7 @@ namespace TextProcess.Wpf.ViewModels
         {
             try
             {
-                var statistics = await _textStatisticsService.TextAnalyzeAsync(TextToProcess);
+                var statistics = await _textStatisticsService!.TextAnalyzeAsync(TextToProcess);
 
                 // Update statistics properties
                 NumberOfHyphen = statistics.HyphenCount;
@@ -442,7 +442,7 @@ namespace TextProcess.Wpf.ViewModels
                 ProgressBarVisibility = Visibility.Visible;
 
                 // // Get the order options from the service
-                var orders = await _orderService.GetOrderOptionsAsync();
+                var orders = await _orderService!.GetOrderOptionsAsync();
 
                 // Clear the existing Orders collection
                 Orders.Clear();

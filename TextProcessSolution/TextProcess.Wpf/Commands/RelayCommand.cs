@@ -33,7 +33,7 @@ namespace TextProcess.Wpf.Commands
         /// </summary>
         /// <param name="canExecute">The execution status logic.</param>
         /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Predicate<T> canExecute, Action<T> execute)
+        public RelayCommand(Predicate<T>? canExecute, Action<T> execute)
         {
             if (execute == null)
             {
@@ -51,7 +51,7 @@ namespace TextProcess.Wpf.Commands
         /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
@@ -64,8 +64,13 @@ namespace TextProcess.Wpf.Commands
         /// <returns>
         /// true if this command can be executed; otherwise, false.
         /// </returns>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException("parameter");
+            }
+
             return _canExecute == null || _canExecute((T)parameter);
         }
 
@@ -73,8 +78,18 @@ namespace TextProcess.Wpf.Commands
         /// Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException("parameter");
+            }
+
+            if (_execute == null)
+            {
+                throw new ArgumentNullException("_execute");
+            }
+
             _execute((T)parameter);
         }
         #endregion

@@ -62,7 +62,9 @@ namespace TextProcess.Api.Tests.Core.Orders
         [Fact]
         public void AlphabeticDesc_Null_Test()
         {
+#pragma warning disable CS8625 // No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
             var result = _orderFactory.GetOrderText(2, null).ToList();
+#pragma warning restore CS8625 // No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
 
             Assert.Empty(result);
         }

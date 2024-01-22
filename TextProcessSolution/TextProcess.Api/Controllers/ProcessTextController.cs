@@ -8,7 +8,6 @@ using TextProcess.Api.Models.Response;
 
 namespace TextProcess.Api.Controllers
 {
-
     /// <summary>
     /// Controller for processing text-related operations such as ordering and text statistics.
     /// </summary>

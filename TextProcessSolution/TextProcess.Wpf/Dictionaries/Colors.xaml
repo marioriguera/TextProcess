@@ -65,4 +65,10 @@
     <Color x:Key="Pomegranate_Color">#C0392B</Color>
     <Color x:Key="Silver_Color">#BDC3C7</Color>
     <Color x:Key="Asbestos_Color">#7F8C8D</Color>
+
+    <!-- Define los recursos -->
+    <SolidColorBrush x:Key="Midnightblue_Brush_test" Color="MidnightBlue"/>
+    <SolidColorBrush x:Key="Asbestos_Brush_test" Color="BlueViolet"/>
+    <SolidColorBrush x:Key="Clouds_Brush_test" Color="White"/>
+    <SolidColorBrush x:Key="Alizarin_Brush_test" Color="PaleVioletRed"/>
 </ResourceDictionary>

@@ -89,7 +89,7 @@
                     <Button x:Name="Analyze"
                             Grid.Column="0"
                             Content="Analizar"
-                            Style="{DynamicResource DoTextAnalyze}"
+                            Style="{StaticResource DoTextAnalyzeButtonStyle}"
                             Command="{Binding TextAnalyzeAppCommand}"/>
                     <Label x:Name="AnalyzeMessage"
                            Grid.Column="1"

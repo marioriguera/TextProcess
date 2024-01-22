@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using NLog;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
-using NLog;
 
 namespace TextProcess.Api.Configuration
 {
@@ -127,7 +126,7 @@ namespace TextProcess.Api.Configuration
         }
 
         /// <summary>
-        /// Reconfigures all loggers with configuration from <see cref="ApiConfiguration"/>.
+        /// Reconfigures all loggers with configuration from <see cref="ConfigurationService"/>.
         /// </summary>
         public static void ApplyConfigurationToLogs()
         {

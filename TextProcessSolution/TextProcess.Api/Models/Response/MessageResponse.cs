@@ -7,7 +7,9 @@
     public record MessageResponse<T>
     {
         // Private constructor to enforce immutability.
-        private MessageResponse() { }
+        private MessageResponse()
+        {
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the response is successful.

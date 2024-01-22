@@ -14,7 +14,7 @@ namespace TextProcess.Wpf.Configuration
         /// <summary>
         /// Gets or sets NLog logging configuration.
         /// </summary>
-        private static LoggingConfiguration Config { get; set; }
+        private static LoggingConfiguration? Config { get; set; }
 
         /// <summary>
         /// Adds Debugger log to NLog.

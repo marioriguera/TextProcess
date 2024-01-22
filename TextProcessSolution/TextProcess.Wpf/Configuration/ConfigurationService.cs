@@ -45,7 +45,7 @@ namespace TextProcess.Wpf.Configuration
         /// <summary>
         /// Gets or sets manage host.
         /// </summary>
-        public IHost Host { get; set; }
+        public IHost? Host { get; set; }
         #endregion
 
         #region LogProperties

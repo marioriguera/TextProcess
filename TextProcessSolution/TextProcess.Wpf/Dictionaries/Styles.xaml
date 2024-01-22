@@ -85,14 +85,14 @@
     <Style x:Key="ButtonStyle" TargetType="Button">
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Foreground" Value="{DynamicResource Midnightblue_Brush}"/>
-        <Setter Property="Background" Value="{DynamicResource Asbestos_Brush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Midnightblue_Solid}"/>
+        <Setter Property="Background" Value="{DynamicResource Asbestos_Solid}"/>
     </Style>
 
     <Style x:Key="CloseButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="FontSize" Value="10"/>
-        <Setter Property="Foreground" Value="{DynamicResource Clouds_Brush}"/>
-        <Setter Property="Background" Value="{DynamicResource Alizarin_Brush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Clouds_Solid}"/>
+        <Setter Property="Background" Value="{DynamicResource Alizarin_Solid}"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0 0 10 0"/>
@@ -100,13 +100,13 @@
         <Setter Property="Height" Value="30"/>
     </Style>
 
-    <Style x:Key="DoTextAnalyze" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+    <Style x:Key="DoTextAnalyzeButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="Width" Value="150"/>
         <Setter Property="Height" Value="45"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Foreground" Value="{DynamicResource Clouds_Brush}"/>
-        <Setter Property="Background" Value="{DynamicResource Nephritis_Brush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Clouds_Solid}"/>
+        <Setter Property="Background" Value="{DynamicResource Nephritis_Solid}"/>
     </Style>
     <!--#endregion-->
 
