@@ -392,13 +392,14 @@ namespace TextProcess.Wpf.ViewModels
                 NumberOfHyphen = statistics.HyphenCount;
                 NumberOfWords = statistics.WordCount;
                 NumberOfWhiteSpaces = statistics.SpaceCount;
+
+                AnalysisSuccess();
             }
             catch (Exception ex)
             {
                 ConfigurationService.Current.Logger.Fatal(ex, $"An unhandled exception has occurred processing the text: {TextToProcess} with order {SelectedOrder.Name}.");
 
-                // Hidden progess bar
-                ProgressBarVisibility = Visibility.Hidden;
+                AnalysisFailure();
             }
         }
 
@@ -432,13 +433,14 @@ namespace TextProcess.Wpf.ViewModels
                 }
 
                 NotifyPropertyChanged(nameof(Lines));
+
+                AnalysisSuccess();
             }
             catch (Exception ex)
             {
                 ConfigurationService.Current.Logger.Fatal(ex, $"An unhandled exception has occurred processing the text: {UpdateLines} with order {SelectedOrder.Name}. {nameof(orderText)} = {orderText?.ToString()} , {nameof(lines)} = {string.Join(", ", lines)} .");
 
-                // Hidden progess bar
-                ProgressBarVisibility = Visibility.Hidden;
+                AnalysisFailure();
             }
         }
 
@@ -464,15 +466,14 @@ namespace TextProcess.Wpf.ViewModels
                     _ordersOptions.Add(new(option.Id, option.Name, option.Description));
                 }
 
-                ProgressBarVisibility = Visibility.Hidden;
-                Message = GetMessage(2);
+                AnalysisSuccess();
             }
             catch (Exception ex)
             {
                 // Handle the exception as needed (e.g., log or display an error message)
                 ConfigurationService.Current.Logger.Error($"Error updating orders: {ex.Message}");
-                ProgressBarVisibility = Visibility.Hidden;
-                Message = GetMessage(3);
+
+                AnalysisFailure();
             }
         }
 
@@ -541,6 +542,8 @@ namespace TextProcess.Wpf.ViewModels
         {
             try
             {
+                AnalysisInitialization();
+
                 // Do process text.
                 _ = Application.Current.Dispatcher.Invoke(async () =>
                 {
@@ -559,12 +562,6 @@ namespace TextProcess.Wpf.ViewModels
                     // Update statistics.
                     // Update lines.
                     await Task.WhenAll(UpdateStatisticsAsync(), UpdateLines());
-
-                    // Show success mesagge
-                    Message = GetMessage(2);
-
-                    // Hidden progess bar
-                    ProgressBarVisibility = Visibility.Hidden;
                 });
             }
             catch (Exception ex)
@@ -572,12 +569,44 @@ namespace TextProcess.Wpf.ViewModels
                 // Logs any unhandled exceptions.
                 ConfigurationService.Current.Logger.Fatal(ex, $"An unhandled exception has occurred in {nameof(ExecuteTextAnalyzeAppCommand)} .");
 
-                // Show fail mesagge
-                Message = GetMessage(3);
+                AnalysisFailure();
+            }
+        }
 
+        private void AnalysisInitialization()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // Show progress bar
+                ProgressBarVisibility = Visibility.Visible;
+
+                // Show fail mesagge
+                Message = GetMessage(1);
+            });
+        }
+
+        private void AnalysisSuccess()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 // Hidden progess bar
                 ProgressBarVisibility = Visibility.Hidden;
-            }
+
+                // Show fail mesagge
+                Message = GetMessage(2);
+            });
+        }
+
+        private void AnalysisFailure()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // Hidden progess bar
+                ProgressBarVisibility = Visibility.Hidden;
+
+                // Show fail mesagge
+                Message = GetMessage(3);
+            });
         }
 
         /// <summary>
